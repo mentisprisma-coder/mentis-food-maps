@@ -1,0 +1,21 @@
+{
+  "name": "Food Maps",
+  "short_name": "Food Maps",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5efe5",
+  "theme_color": "#154734",
+  "lang": "pt-PT",
+  "icons": [
+    {
+      "src": "icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

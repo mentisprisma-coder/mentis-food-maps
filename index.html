@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#154734" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Food Maps</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero panel" id="todayHero">
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">Mentis Prisma</p>
+          <h1>Food Maps</h1>
+          <p id="todayDateLabel" class="hero-date">Hoje</p>
+        </div>
+        <button id="themeToggle" class="icon-btn" type="button" title="Alternar tema">◐</button>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card">
+          <strong id="todayMealCount">0</strong>
+          <span>Refeições hoje</span>
+        </article>
+        <article class="stat-card">
+          <strong id="todayPendingCount">0</strong>
+          <span>Por definir</span>
+        </article>
+        <article class="stat-card accent-card">
+          <strong id="todayStateCount">0</strong>
+          <span>Com estado</span>
+        </article>
+      </div>
+
+      <button id="quickAddMealBtn" class="primary-btn wide-btn" type="button">Adicionar refeição</button>
+    </header>
+
+    <main>
+      <section class="panel section-card" id="todaySection">
+        <div class="section-head">
+          <h2>Hoje</h2>
+          <span id="todaySummaryPill" class="pill">0 registos</span>
+        </div>
+        <div id="todayList" class="meal-list"></div>
+      </section>
+
+      <section class="panel section-card hidden" id="createSection">
+        <div class="section-head">
+          <h2 id="formTitle">Adicionar refeição</h2>
+          <span class="pill secondary">Fluxo rápido</span>
+        </div>
+
+        <form id="mealForm" class="meal-form">
+          <div class="form-block">
+            <div class="block-head">
+              <div>
+                <h3>Alimentos</h3>
+                <p>Adicione um alimento de cada vez.</p>
+              </div>
+              <span id="mealItemsCount" class="pill secondary">0 itens</span>
+            </div>
+            <div class="inline-entry">
+              <input id="foodInput" list="foodSuggestions" type="text" maxlength="60" placeholder="Ex: arroz" autocomplete="off" />
+              <button id="addFoodBtn" class="ghost-btn" type="button">Adicionar outro</button>
+            </div>
+            <datalist id="foodSuggestions"></datalist>
+            <div id="foodList" class="token-list"></div>
+          </div>
+
+          <div class="form-block">
+            <div class="block-head">
+              <div>
+                <h3>Momento</h3>
+                <p>Preenchido automaticamente, mas pode ajustar.</p>
+              </div>
+            </div>
+            <label>
+              Data e hora
+              <input id="datetimeInput" type="datetime-local" required />
+            </label>
+          </div>
+
+          <div class="form-block">
+            <div class="block-head">
+              <div>
+                <h3>Estado</h3>
+                <p>Opcional. Pode definir agora ou mais tarde.</p>
+              </div>
+            </div>
+            <div class="state-grid">
+              <button class="state-btn active" type="button" data-state="">Sem estado</button>
+              <button class="state-btn state-green" type="button" data-state="green">Verde</button>
+              <button class="state-btn state-yellow" type="button" data-state="yellow">Amarelo</button>
+              <button class="state-btn state-red" type="button" data-state="red">Vermelho</button>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <div class="block-head">
+              <div>
+                <h3>Efeitos</h3>
+                <p>Curtos, opcionais e reutilizáveis.</p>
+              </div>
+              <span id="effectsCount" class="pill secondary">0 efeitos</span>
+            </div>
+            <div class="inline-entry">
+              <input id="effectInput" list="effectSuggestions" type="text" maxlength="60" placeholder="Ex: azia" autocomplete="off" />
+              <button id="addEffectBtn" class="ghost-btn" type="button">Adicionar efeito</button>
+            </div>
+            <datalist id="effectSuggestions"></datalist>
+            <div id="effectList" class="token-list"></div>
+          </div>
+
+          <div class="form-actions">
+            <button id="saveMealBtn" class="primary-btn" type="submit">Guardar refeição</button>
+            <button id="cancelEditBtn" class="ghost-btn hidden" type="button">Cancelar edição</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel section-card hidden" id="historySection">
+        <div class="section-head">
+          <h2>Histórico</h2>
+          <div class="mini-toggle">
+            <button class="mini-tab active" type="button" data-history-view="timeline">Registos</button>
+            <button class="mini-tab" type="button" data-history-view="patterns">Padrões</button>
+          </div>
+        </div>
+
+        <div id="historyTimelineView">
+          <div class="filter-grid">
+            <label>
+              Data
+              <input id="historyDateFilter" type="date" />
+            </label>
+            <label>
+              Estado
+              <select id="historyStateFilter">
+                <option value="">Todos</option>
+                <option value="unset">Por definir</option>
+                <option value="green">Verde</option>
+                <option value="yellow">Amarelo</option>
+                <option value="red">Vermelho</option>
+              </select>
+            </label>
+            <label>
+              Alimento
+              <input id="historyFoodFilter" list="historyFoodSuggestions" type="text" placeholder="Filtrar alimento" />
+            </label>
+            <label>
+              Efeito
+              <input id="historyEffectFilter" list="historyEffectSuggestions" type="text" placeholder="Filtrar efeito" />
+            </label>
+          </div>
+          <datalist id="historyFoodSuggestions"></datalist>
+          <datalist id="historyEffectSuggestions"></datalist>
+          <div class="section-head compact-head">
+            <p id="historySummary" class="section-copy">0 resultados</p>
+            <button id="clearFiltersBtn" class="ghost-btn" type="button">Limpar filtros</button>
+          </div>
+          <div id="historyList" class="meal-list"></div>
+        </div>
+
+        <div id="historyPatternsView" class="hidden">
+          <p class="section-copy">Associações simples baseadas apenas em refeições com estado.</p>
+          <div class="patterns-grid">
+            <article class="pattern-card">
+              <div class="section-head compact-head">
+                <h3>Alimentos associados a amarelo/vermelho</h3>
+                <span id="riskFoodsCount" class="pill secondary">0</span>
+              </div>
+              <div id="riskFoodsList" class="pattern-list"></div>
+            </article>
+            <article class="pattern-card">
+              <div class="section-head compact-head">
+                <h3>Efeitos mais frequentes</h3>
+                <span id="effectsPatternCount" class="pill secondary">0</span>
+              </div>
+              <div id="effectsPatternList" class="pattern-list"></div>
+            </article>
+            <article class="pattern-card">
+              <div class="section-head compact-head">
+                <h3>Alimentos mais usados</h3>
+                <span id="usedFoodsCount" class="pill secondary">0</span>
+              </div>
+              <div id="usedFoodsList" class="pattern-list"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section-card hidden" id="settingsSection">
+        <div class="section-head">
+          <h2>Definições</h2>
+        </div>
+        <div class="settings-list">
+          <button id="exportDataBtn" class="settings-item" type="button">Exportar dados</button>
+          <button id="importDataBtn" class="settings-item" type="button">Importar dados</button>
+          <button id="resetDataBtn" class="settings-item danger" type="button">Apagar todos os dados</button>
+          <div class="settings-info">
+            <p>Food Maps</p>
+            <small>Registo alimentar simples com armazenamento local.</small>
+            <small>Os dados ficam neste dispositivo e podem ser perdidos se limpar o navegador sem backup.</small>
+          </div>
+          <input id="importDataInput" class="hidden" type="file" accept="application/json" />
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav panel">
+      <button class="nav-btn active" type="button" data-view="today">
+        <span>Hoje</span>
+      </button>
+      <button class="nav-btn" type="button" data-view="create">
+        <span>Criar</span>
+      </button>
+      <button class="nav-btn" type="button" data-view="history">
+        <span>Histórico</span>
+      </button>
+      <button class="nav-btn" type="button" data-view="settings">
+        <span>Definições</span>
+      </button>
+    </nav>
+  </div>
+
+  <div id="toast" aria-live="polite"></div>
+  <div id="updateNotice" class="update-notice hidden">
+    <span>Nova versão disponível</span>
+    <button id="updateAppBtn" type="button">Atualizar</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+        const notice = document.getElementById("updateNotice");
+        const updateBtn = document.getElementById("updateAppBtn");
+        let refreshing = false;
+
+        function showNotice() {
+          notice.classList.remove("hidden");
+        }
+
+        reg.addEventListener("updatefound", () => {
+          const installing = reg.installing;
+          if (!installing) return;
+          installing.addEventListener("statechange", () => {
+            if (installing.state === "installed" && navigator.serviceWorker.controller) {
+              showNotice();
+            }
+          });
+        });
+
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshing) return;
+          refreshing = true;
+          showNotice();
+        });
+
+        updateBtn.addEventListener("click", () => window.location.reload());
+      } catch (error) {
+        console.error("Erro ao registar service worker:", error);
+      }
+    });
+  }
+  </script>
+</body>
+</html>
